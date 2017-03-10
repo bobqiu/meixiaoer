@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11762" systemVersion="16D32" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="AuditNotificationCell" rowHeight="176" id="KGk-i7-Jjw" customClass="AuditNotificationCell">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="176"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+                <rect key="frame" x="0.0" y="0.0" width="320" height="175"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="2010-10-10 10:10" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hZS-GS-xot">
+                        <rect key="frame" x="107.5" y="5" width="106" height="16"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                        <color key="textColor" red="0.40000000000000002" green="0.40000000000000002" blue="0.40000000000000002" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Mmw-2L-OdZ">
+                        <rect key="frame" x="10" y="31" width="300" height="139.5"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="企业认证失败" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dDw-fY-s3o">
+                                <rect key="frame" x="10" y="10" width="98" height="19.5"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="企业认证失败企业认证失败企业认证失败企业认证失败企业认证失败企业认证失败企业认证失败企业认证失败" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4j8-ja-lSh">
+                                <rect key="frame" x="10" y="40" width="280" height="54"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                <color key="textColor" red="0.40000000000000002" green="0.40000000000000002" blue="0.40000000000000002" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Or5-Yz-vdv">
+                                <rect key="frame" x="224" y="94" width="66" height="32"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                <state key="normal" title="重新提交">
+                                    <color key="titleColor" red="1" green="0.63137254901960782" blue="0.10196078431372549" alpha="1" colorSpace="calibratedRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="clickRecommitAction:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="Ogf-aZ-lMb"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="dDw-fY-s3o" firstAttribute="top" secondItem="Mmw-2L-OdZ" secondAttribute="top" constant="10" id="0w1-hY-Lwf"/>
+                            <constraint firstItem="4j8-ja-lSh" firstAttribute="top" secondItem="dDw-fY-s3o" secondAttribute="bottom" constant="10" id="8ZN-re-TFB"/>
+                            <constraint firstItem="4j8-ja-lSh" firstAttribute="leading" secondItem="Mmw-2L-OdZ" secondAttribute="leading" constant="10" id="8Zb-DD-gH6"/>
+                            <constraint firstItem="dDw-fY-s3o" firstAttribute="leading" secondItem="Mmw-2L-OdZ" secondAttribute="leading" constant="10" id="I4R-wi-sqM"/>
+                            <constraint firstAttribute="trailing" secondItem="Or5-Yz-vdv" secondAttribute="trailing" constant="10" id="KjI-Xo-3q7"/>
+                            <constraint firstItem="Or5-Yz-vdv" firstAttribute="top" secondItem="4j8-ja-lSh" secondAttribute="bottom" id="MVF-2D-Yec"/>
+                            <constraint firstAttribute="trailing" secondItem="4j8-ja-lSh" secondAttribute="trailing" constant="10" id="mn0-CH-ELH"/>
+                        </constraints>
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                <integer key="value" value="10"/>
+                            </userDefinedRuntimeAttribute>
+                            <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
+                        </userDefinedRuntimeAttributes>
+                    </view>
+                </subviews>
+                <color key="backgroundColor" red="0.94117647058823528" green="0.94117647058823528" blue="0.94117647058823528" alpha="1" colorSpace="calibratedRGB"/>
+                <constraints>
+                    <constraint firstItem="Mmw-2L-OdZ" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="10" id="0kM-4H-Gve"/>
+                    <constraint firstItem="Mmw-2L-OdZ" firstAttribute="top" secondItem="hZS-GS-xot" secondAttribute="bottom" constant="10" id="6T7-cX-VTS"/>
+                    <constraint firstAttribute="trailing" secondItem="Mmw-2L-OdZ" secondAttribute="trailing" constant="10" id="Ks9-Ry-PMU"/>
+                    <constraint firstAttribute="bottom" secondItem="Mmw-2L-OdZ" secondAttribute="bottom" constant="5" id="YJM-Sh-3c5"/>
+                    <constraint firstItem="hZS-GS-xot" firstAttribute="centerX" secondItem="H2p-sc-9uM" secondAttribute="centerX" id="niv-0i-Zy7"/>
+                    <constraint firstItem="hZS-GS-xot" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="5" id="uy9-ot-IpF"/>
+                </constraints>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="contentLabel" destination="4j8-ja-lSh" id="2Jk-za-zEO"/>
+                <outlet property="notificationLabel" destination="hZS-GS-xot" id="2ST-dp-ul8"/>
+                <outlet property="recommitBtn" destination="Or5-Yz-vdv" id="ghW-IU-0ls"/>
+                <outlet property="resaonLabel" destination="dDw-fY-s3o" id="9ek-Pi-TfT"/>
+            </connections>
+            <point key="canvasLocation" x="-195" y="111"/>
+        </tableViewCell>
+    </objects>
+</document>

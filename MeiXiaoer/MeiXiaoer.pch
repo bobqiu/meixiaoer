@@ -1,0 +1,47 @@
+//
+//  MeiXiaoer.pch
+//  MeiXiaoer
+//
+//  Created by 李祥起 on 2017/2/24.
+//  Copyright © 2017年 wei. All rights reserved.
+//
+
+#ifdef __OBJC__
+#import <UIKit/UIKit.h>
+#ifndef MeiXiaoer_pch
+#define MeiXiaoer_pch
+
+// Include any system framework and library headers here that should be included in all compilation units.
+// You will also need to set the Prefix Header build setting of one or more of your targets to reference this file.
+
+#define WIDTH [UIScreen mainScreen].bounds.size.width
+#define HEIGHT [UIScreen mainScreen].bounds.size.height
+
+#import "NSString+StringCategory.h"
+#import "NSString+MD5Code.h"
+#import "UserInfo.h"
+#import "UIColor+HexString.h"
+
+#define MeixiaoerType @"MeixiaoerType" //切换模式 buy 买煤；sell 卖煤 
+#define Buy @"Buy"
+#define Sell @"Sell"
+
+#define API_orderlist @"order/orderlist"//订单通知
+#define API_systeminform @"user/systeminform"//系统通知
+#define API_payhelper @"moneybill/moneybill"// 支付助手
+#define API_audit @"user/audit"// 审核进度
+#define Api_getotheruserinfo @"register/getotheruserinfo"//获取个人信息
+
+// NSUserDefaults简便写法
+#define KDefcults [NSUserDefaults standardUserDefaults]
+// weak简便写法
+#define XWeakSelf __weak typeof(self) weakSelf = self
+
+#import <HyphenateLite/HyphenateLite.h>
+#import "EaseUI.h"
+#import <MJExtension.h>
+#import "MJRefresh.h"
+
+
+#endif /* MeiXiaoer_pch */
+#endif
