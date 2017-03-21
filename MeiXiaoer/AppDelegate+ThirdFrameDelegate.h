@@ -8,7 +8,7 @@
 
 #import "AppDelegate.h"
 
-@interface AppDelegate (ThirdFrameDelegate)
+@interface AppDelegate (ThirdFrameDelegate)<EMChatManagerDelegate>
 
 /** 环信SDk */
 + (void)setEaseMobSDK:(UIApplication *)application launchOptions:(NSDictionary *)launchOptions;/** 进入后台 */

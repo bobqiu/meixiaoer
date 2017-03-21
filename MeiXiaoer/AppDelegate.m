@@ -21,17 +21,23 @@
 #import "AppDelegate+ThirdFrameDelegate.h"
 
 #import "WebViewViewController.h"
-
+#import "HTTPTool.h"
 
 #import "UMessage.h"
 //#import <UserNotifications.h>
 
-@interface AppDelegate ()<WXApiDelegate,UIAlertViewDelegate, UNUserNotificationCenterDelegate>
+@interface AppDelegate ()<WXApiDelegate,UIAlertViewDelegate, UNUserNotificationCenterDelegate, EMChatManagerDelegate>
 
 @property (nonatomic, strong) UITabBarController *tabBC; /**< 导航控制器 */
 
-@end
+@property (nonatomic, strong) NSDate *lastPlaySoundDate; /**< <#注释#> */
 
+@end
+//两次提示的默认间隔
+static const CGFloat kDefaultPlaySoundInterval = 3.0;
+static NSString *kMessageType = @"MessageType";
+static NSString *kConversationChatter = @"ConversationChatter";
+static NSString *kGroupName = @"GroupName";
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
@@ -82,8 +88,13 @@
         WebViewViewController *webVc = [[WebViewViewController alloc] init];
         self.window.rootViewController = webVc;
     }
-        
+    
+#pragma mark
+#pragma mark - 环信
+
     [AppDelegate setEaseMobSDK:application launchOptions:launchOptions];
+    //添加监听在线推送消息
+    [[EMClient sharedClient].chatManager addDelegate:self delegateQueue:nil];
     
 #pragma mark
 #pragma mark - 友盟推送
@@ -109,6 +120,17 @@
             NSLog(@"%@", error);
         }else {
             NSLog(@"%@", responseObject);
+            // 添加成功
+            // 设置当前账号的设备
+            NSDictionary *dict = @{
+                                   @"id":[UserInfo getUserInfo].ID,
+                                   @"type":@(2)
+                                   };
+            [HTTPTool getRequestWithPath:Api_device params:dict success:^(id successJson) {
+                NSLog(@"%@", successJson);
+            } error:^(NSError *error) {
+                NSLog(@"%@", error);
+            }];
         }
     }];
 
@@ -131,12 +153,109 @@
 
     return YES;
 }
+//监听环信在线推送消息
+//- (void)messagesDidReceive:(NSArray *)aMessages{
+//    
+//    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"提示" message:@"收到环信通知" delegate:nil cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
+//    [alertView show];
+//    
+//    //aMessages是一个对象,包含了发过来的所有信息,怎么提取想要的信息我会在后面贴出来.
+//}
+- (void)didReceiveMessages:(NSArray *)aMessages
+{
+#if !TARGET_IPHONE_SIMULATOR
+    [self playSoundAndVibration];
+    
+    BOOL isAppActivity = [[UIApplication sharedApplication] applicationState] == UIApplicationStateActive;
+    if (!isAppActivity) {
+        [self showNotificationWithMessage:[aMessages firstObject]];
+    }
+#endif
+}
+- (void)playSoundAndVibration{
+    NSTimeInterval timeInterval = [[NSDate date]
+                                   timeIntervalSinceDate:self.lastPlaySoundDate];
+    if (timeInterval < kDefaultPlaySoundInterval) {
+        //如果距离上次响铃和震动时间太短, 则跳过响铃
+        NSLog(@"skip ringing & vibration %@, %@", [NSDate date], self.lastPlaySoundDate);
+        return;
+    }
+    
+    //保存最后一次响铃时间
+    self.lastPlaySoundDate = [NSDate date];
+    
+    // 收到消息时，播放音频
+    [[EMCDDeviceManager sharedInstance] playNewMessageSound];
+    
+    // 收到消息时，震动
+    [[EMCDDeviceManager sharedInstance] playVibration];
+}
+- (void)showNotificationWithMessage:(EMMessage *)message{
+    NSString *messageStr = nil;
+    switch (message.body.type) {
+        case EMMessageBodyTypeText:
+        {
+            messageStr = [EaseConvertToCommonEmoticonsHelper
+                                                      convertToSystemEmoticons:((EMTextMessageBody *)message.body).text];
+        }
+            break;
+        case EMMessageBodyTypeImage:
+        {
+            messageStr = @"[图片]";
+        }
+            break;
+        case EMMessageBodyTypeLocation:
+        {
+            messageStr = @"[位置]";
+        }
+            break;
+        case EMMessageBodyTypeVoice:
+        {
+            messageStr = @"[音频]";
+        }
+            break;
+        case EMMessageBodyTypeVideo:{
+            messageStr = @"[视频]";
+        }
+            break;
+        default:
+            break;
+    }
+    NSDictionary *dict = @{
+                           @"uid":message.from
+                           };
+    [HTTPTool getRequestWithPath:Api_getotheruserinfo params:dict success:^(id successJson) {
+        NSLog(@"%@", successJson);
+        //发送本地推送
+        UILocalNotification *notification = [[UILocalNotification alloc] init];
+        notification.fireDate = [NSDate date]; //触发通知的时间
+        
+        NSString *title = [successJson[@"data"] objectForKey:@"nickName"];
+        
+        notification.alertBody = [NSString stringWithFormat:@"%@:%@", title, messageStr];
+        notification.alertAction = @"打开";
+        notification.timeZone = [NSTimeZone defaultTimeZone];
+        notification.soundName = UILocalNotificationDefaultSoundName;
+        
+        //发送通知
+        [[UIApplication sharedApplication] scheduleLocalNotification:notification];
+        UIApplication *application = [UIApplication sharedApplication];
+        application.applicationIconBadgeNumber += 1;
+
+    } error:^(NSError *error) {
+        NSLog(@"%@", error);
+    }];
+}
+
 // 注册token
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
+    // 友盟自动获取token
+        
     NSLog(@"%@",[[[[deviceToken description] stringByReplacingOccurrencesOfString: @"<" withString: @""]
                   stringByReplacingOccurrencesOfString: @">" withString: @""]
                  stringByReplacingOccurrencesOfString: @" " withString: @""]);
 }
+
 //iOS10以下使用这个方法接收通知
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo
 {

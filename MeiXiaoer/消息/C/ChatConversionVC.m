@@ -18,6 +18,7 @@
 
 @end
 
+
 @implementation ChatConversionVC
 
 //#pragma mark
@@ -40,7 +41,6 @@
     }else{//对方
         model.nickname = self.userName;//用户昵称
         if (self.userIcon.length>0) {
-            //            NSString *urlString = [IMAGE_HOST stringByAppendingString:[UserInfos sharedUser].userimgurl];
             model.avatarURLPath = self.userIcon;//头像网络地址
         }
     }
@@ -98,7 +98,6 @@
     [self.chatBarMoreView updateItemWithImage:[UIImage imageNamed:@"矢量智能对象"] highlightedImage:[UIImage imageNamed:@"矢量智能对象"] title:@"拍照" atIndex:1];
 //    self.chatToolbar;
 }
-
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.

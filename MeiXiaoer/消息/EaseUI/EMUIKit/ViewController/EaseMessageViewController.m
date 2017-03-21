@@ -26,6 +26,7 @@
 #import "UIImage+EMGIF.h"
 #import "EaseLocalDefine.h"
 #import "EaseSDKHelper.h"
+#import <UserNotifications/UserNotifications.h>
 
 #define KHintAdjustY    50
 
@@ -56,6 +57,7 @@
 @property (nonatomic) BOOL isKicked;
 @property (nonatomic) BOOL isPlayingAudio;
 @property (nonatomic, strong) NSMutableArray *atTargets;
+@property (strong, nonatomic) NSDate *lastPlaySoundDate;
 
 @end
 
@@ -1547,13 +1549,15 @@
             
             [self _sendHasReadResponseForMessages:@[message]
                                            isRead:NO];
-            
             if ([self _shouldMarkMessageAsRead])
             {
                 [self.conversation markMessageAsReadWithId:message.messageId error:nil];
             }
         }
     }
+    
+//    EMMessage *lastMessage = aMessages [0];
+//    [self showNotificationWithMessage:lastMessage];
 }
 
 - (void)didReceiveCmdMessages:(NSArray *)aCmdMessages
@@ -1564,6 +1568,7 @@
             break;
         }
     }
+    
 }
 
 - (void)didReceiveHasDeliveredAcks:(NSArray *)aMessages

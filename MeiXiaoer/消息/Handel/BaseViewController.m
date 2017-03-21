@@ -111,6 +111,8 @@
     BOOL isAutoLogin = [EMClient sharedClient].options.isAutoLogin;
     if (!isAutoLogin) {
             EMError *error = [[EMClient sharedClient] loginWithUsername:userId password:[NSString md5WithString:userId]];
+            [[EMClient sharedClient] setApnsNickname:[UserInfo getUserInfo].nickName];
+        
             if (!error) {
                 NSLog(@"登录后环信登陆成功");
             } else {
@@ -119,8 +121,8 @@
         }else{
             NSLog(@"未登录");
     }
+    
     // 绑定推送设备
-   
     [UMessage removeAlias:userId type:@"ios" response:^(id  _Nonnull responseObject, NSError * _Nonnull error) {
         if (error) {
             NSLog(@"%@", error);
@@ -133,8 +135,20 @@
             NSLog(@"%@", error);
         }else {
             NSLog(@"%@", responseObject);
+            // 设置当前账号的设备
+            NSDictionary *dict = @{
+                                   @"id":userId,
+                                   @"type":@(2)
+                                   };
+            [self getRequestWithPath:Api_device params:dict success:^(id successJson) {
+                NSLog(@"%@", successJson);
+            } error:^(NSError *error) {
+                NSLog(@"%@", error);
+            }];
         }
     }];
+
+  
     
 }
 - (void)didReceiveMemoryWarning {

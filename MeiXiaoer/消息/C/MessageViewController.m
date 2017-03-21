@@ -62,7 +62,7 @@ static NSString *cellid = @"MessageCell";
         for (EMConversation *conversation in arr) {
             if (conversation.type == EMConversationTypeChat) {
                 [self.session2dataArr addObject:conversation];
-                [self.tableView reloadData];
+                [self getConversationIconsWithId:conversation.conversationId];
             }
         }
     }else{
@@ -161,7 +161,9 @@ static NSString *cellid = @"MessageCell";
     
     
     NSDictionary *auditDict = @{
-                           @"token":[UserInfo getUserInfo].token
+                           @"token":[UserInfo getUserInfo].token,
+                           @"isread":@(1)
+                           
                            };
     [self getRequestWithPath:API_audit params:auditDict success:^(id successJson) {
         if ([successJson[@"code"] integerValue] == 1) {
@@ -233,7 +235,8 @@ static NSString *cellid = @"MessageCell";
                 if (conversation.type == EMConversationTypeChat ) {
                     
                     [self.session2dataArr addObject:conversation];
-                    [self.tableView reloadData];
+                    [self getConversationIconsWithId:conversation.conversationId];
+                    
                 }
             }
 
@@ -246,14 +249,47 @@ static NSString *cellid = @"MessageCell";
     }];
 
 }
+- (void)getConversationIconsWithId:(NSString *)conversationid {
+    NSDictionary *dict = @{
+                           @"uid":conversationid
+                           };
+    [self getRequestWithPath:Api_getotheruserinfo params:dict success:^(id successJson) {
+        NSLog(@"%@", successJson);
+        if ([[successJson[@"code"] stringValue] isEqualToString:@"1"]) {
+            NSString *userName = [successJson[@"data"] objectForKey:@"nickName"];
+            NSString *imgUrl = [successJson[@"data"] objectForKey:@"imgUrl"];
+            NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+            [dict setObject:userName forKey:@"userName"];
+            [dict setObject:imgUrl forKey:@"imgUrl"];
+            [self.session2Icons setObject:dict forKey:conversationid];
+        }else{
+            NSString *userName = conversationid;
+            NSString *imgUrl = @"";
+            NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+            [dict setObject:userName forKey:@"userName"];
+            [dict setObject:imgUrl forKey:@"imgUrl"];
+            [self.session2Icons setObject:dict forKey:conversationid];
+        }
+
+        if (self.session2Icons.count == self.session2dataArr.count) {
+            [self.tableView reloadData];
+        }
+    } error:^(NSError *error) {
+        NSLog(@"%@", error);
+    }];
+}
+
 - (void)call{
-    //打电话
-    NSMutableString *str=[[NSMutableString alloc] initWithFormat:@"tel:400-044-0806"];
-    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:str]];
-//    UIWebView *callWebview = [[UIWebView alloc] init];
-//    [callWebview loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:str]]];
-//    [self.view addSubview:callWebview];
-//    [[UIApplication  sharedApplication]openURL:[NSURL URLWithString:str]];
+    
+    [self getRequestWithPath:Api_Call params:nil success:^(id successJson) {
+        NSLog(@"%@", successJson);
+        NSString *tel = [[successJson objectForKey:@"data"] objectForKey:@"servicetel"];
+        // 拨打电话
+        NSMutableString *str=[[NSMutableString alloc] initWithFormat:@"tel:%@", tel];
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:str]];
+    } error:^(NSError *error) {
+        NSLog(@"%@", error);
+    }];
 }
 
 - (void)loginHuanxin {
@@ -266,6 +302,7 @@ static NSString *cellid = @"MessageCell";
         NSString *userId = [UserInfo getUserInfo].ID;
         
         EMError *error2 = [[EMClient sharedClient] loginWithUsername:userId password:[NSString md5WithString:userId]];
+        [[EMClient sharedClient] setApnsNickname:[UserInfo getUserInfo].nickName];
         if (!error2) {
             NSLog(@"登录成功");
         }else{
@@ -346,6 +383,8 @@ static NSString *cellid = @"MessageCell";
         _tableView.dataSource = self;
         _tableView.showsHorizontalScrollIndicator = NO;
         _tableView.backgroundColor = [UIColor colorWithRed:242/255.0 green:242/255.0 blue:242/255.0 alpha:1];
+        
+        _tableView.tableFooterView = [[UIView alloc] init];
         
         [_tableView registerNib:[UINib nibWithNibName:cellid bundle:nil] forCellReuseIdentifier:cellid];
     }
@@ -449,7 +488,22 @@ static NSString *cellid = @"MessageCell";
 //            }
             
             if (conversation.latestMessage) {
-                cell.titleLabel.text = [KDefcults objectForKey:conversation.conversationId];
+//
+                
+//                if ([[conversation.latestMessage.ext objectForKey:@"userName"] length]>0) {
+//                    cell.titleLabel.text = [conversation.latestMessage.ext objectForKey:@"userName"];
+//                }else if ([[KDefcults objectForKey:conversation.conversationId] length] > 0) {
+//                    cell.titleLabel.text = [KDefcults objectForKey:conversation.conversationId];
+//                }else{
+//                    cell.titleLabel.text = @"";
+//                }
+                NSDictionary *dict = [self.session2Icons objectForKey:conversation.conversationId];
+                
+                cell.titleLabel.text = [dict objectForKey:@"userName"];
+                NSString *imgUrl = [dict objectForKey:@"imgUrl"];
+                if (imgUrl.length != 0) {
+                    [cell.iconView sd_setImageWithURL:[dict objectForKey:@"imgUrl"] placeholderImage:[UIImage imageNamed:@"组-16"]];
+                }
                 cell.contentLabel.text = [self _latestMessageTitleForConversation:conversation];
                 cell.lastTimeLabel.text = [self _latestMessageTimeForConversation:conversation];
                 
@@ -467,7 +521,7 @@ static NSString *cellid = @"MessageCell";
     }
     return cell;
 }
-// 最后信息
+// 最后信息时间
 - (NSString *)_latestMessageTimeForConversation:(EMConversation *)conversation
 {
     NSString *latestMessageTime = @"";
@@ -483,7 +537,7 @@ static NSString *cellid = @"MessageCell";
     }
     return latestMessageTime;
 }
-// 最后时间
+// 最后内容
 - (NSString *)_latestMessageTitleForConversation:(EMConversation *)conversation
 {
     NSString *latestMessageTitle = @"";
@@ -563,7 +617,21 @@ static NSString *cellid = @"MessageCell";
         ChatConversionVC *singleVC = [[ChatConversionVC alloc] initWithConversationChatter:conversation.conversationId conversationType:(EMConversationTypeChat)];
         singleVC.hidesBottomBarWhenPushed = YES;
         singleVC.userId = conversation.conversationId;
-        singleVC.userName =  [KDefcults objectForKey:conversation.conversationId];
+//        singleVC.userName =  [KDefcults objectForKey:conversation.conversationId];
+        NSDictionary *dict = [self.session2Icons objectForKey:conversation.conversationId];
+        singleVC.userName = [dict objectForKey:@"userName"];
+        NSString *imgUrl = [dict objectForKey:@"imgUrl"];
+        if (imgUrl.length != 0) {
+            singleVC.userIcon = imgUrl;
+        }
+//        if ([[conversation.latestMessage.ext objectForKey:@"userName"] length]>0) {
+//            singleVC.userName = [conversation.latestMessage.ext objectForKey:@"userName"];
+//        }else if ([[KDefcults objectForKey:conversation.conversationId] length] > 0) {
+//            singleVC.userName = [KDefcults objectForKey:conversation.conversationId];
+//        }else{
+//            singleVC.userName = @"";
+//        }
+        
         // 动画效果
         CATransition *animation = [CATransition animation];
         animation.duration = 0.3;

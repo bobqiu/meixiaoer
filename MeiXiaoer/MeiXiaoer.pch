@@ -31,7 +31,8 @@
 #define API_payhelper @"moneybill/moneybill"// 支付助手
 #define API_audit @"user/audit"// 审核进度
 #define Api_getotheruserinfo @"register/getotheruserinfo"//获取个人信息
-
+#define Api_device @"register/device"// 设备信息
+#define Api_Call @"aboutus/aboutus" // 电话号码请求
 // NSUserDefaults简便写法
 #define KDefcults [NSUserDefaults standardUserDefaults]
 // weak简便写法

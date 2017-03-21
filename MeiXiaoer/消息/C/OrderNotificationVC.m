@@ -12,10 +12,12 @@
 #import "WebViewViewController.h"
 
 @interface OrderNotificationVC ()<UITableViewDelegate, UITableViewDataSource>
-
+{
+    int page;
+}
 @property (nonatomic, strong) UITableView *tableView; /**< tableview */
 
-@property (nonatomic, strong) NSArray *dataArr; /**< 数据 */
+@property (nonatomic, strong) NSMutableArray *dataArr; /**< 数据 */
 
 @end
 
@@ -30,17 +32,32 @@ static NSString *cellid = @"OrderNotificationCell";
     // 订单列表的
     NSDictionary *dict = @{
                            @"status":@(0),
-                           @"pageindex":@(1),
+                           @"pageindex":@(page),
                            @"pagesize":@(10),
                            @"token":[UserInfo getUserInfo].token
                            };
     [self getRequestWithPath:API_orderlist params:dict success:^(id successJson) {
         NSLog(@"订单通知---%@", successJson);
-        if ([successJson[@"code"] isEqualToString:@"0000"]) {
-            self.dataArr = [OrderNotificationModel mj_objectArrayWithKeyValuesArray:successJson[@"data"]];
+        if (page == 1) {
+            [self.tableView.mj_footer resetNoMoreData];
+            if ([successJson[@"code"] isEqualToString:@"0000"]) {
+                self.dataArr = [OrderNotificationModel mj_objectArrayWithKeyValuesArray:successJson[@"data"]];
+                [self.tableView reloadData];
+            }
+        }else{
+            NSIndexPath *index = [NSIndexPath indexPathForRow:self.dataArr.count - 1 inSection:0];
+            NSArray *arr = [OrderNotificationModel mj_objectArrayWithKeyValuesArray:successJson[@"data"]];
+            [self.dataArr addObjectsFromArray:arr];
+            if (arr.count < 10) {
+                [self.tableView.mj_footer endRefreshingWithNoMoreData];
+                page -= 1;
+            }else{
+                [self.tableView.mj_footer endRefreshing];
+            }
             [self.tableView reloadData];
+            [self.tableView scrollToRowAtIndexPath:index atScrollPosition:(UITableViewScrollPositionTop) animated:YES];
         }
-    } error:^(NSError *error) {
+        } error:^(NSError *error) {
         NSLog(@"%@", error);
     }];
     
@@ -52,16 +69,22 @@ static NSString *cellid = @"OrderNotificationCell";
     [self.view addSubview:self.tableView];
     
     [self setNavBarItem];
+    page = 1;
     [self loadData];
     self.tableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingBlock:^{
+        page = 1;
         [self loadData];
         [self.tableView.mj_header endRefreshing];
     }];
-    
+    self.tableView.mj_footer.automaticallyHidden = YES;
+    self.tableView.mj_footer = [MJRefreshAutoNormalFooter footerWithRefreshingBlock:^{
+        page ++;
+        [self loadData];
+    }];
 }
-- (NSArray *)dataArr {
+- (NSMutableArray *)dataArr {
     if (!_dataArr) {
-        _dataArr = [NSArray array];
+        _dataArr = [NSMutableArray array];
     }
     return _dataArr;
 }
