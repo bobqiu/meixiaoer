@@ -35,7 +35,7 @@
 }
 - (UILabel *)titleLabel {
     if (!_titleLabel) {
-        _titleLabel = [[UILabel alloc] initWithFrame:CGRectMake((WIDTH - 150) / 2, 20, WIDTH - 150, 30)];
+        _titleLabel = [[UILabel alloc] initWithFrame:CGRectMake((WIDTH - 200) / 2, 20, 200, 30)];
         _titleLabel.text = @"掌柜的";
         _titleLabel.textColor = [UIColor colorWithHexString:@"#333333"];
         _titleLabel.textAlignment = NSTextAlignmentCenter;

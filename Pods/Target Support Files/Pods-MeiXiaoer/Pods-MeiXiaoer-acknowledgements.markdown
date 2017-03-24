@@ -50,10 +50,6 @@ SOFTWARE.
 
 
 
-## HyphenateLite
-
-Hyphenate Inc. 2016
-
 ## MJExtension
 
 Copyright (c) 2013-2015 MJExtension (https://github.com/CoderMJLee/MJExtension)
