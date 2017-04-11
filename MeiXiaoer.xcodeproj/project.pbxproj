@@ -16,6 +16,7 @@
 		41593BCE1E641A4900088206 /* OrderNotificationModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 41593BCD1E641A4900088206 /* OrderNotificationModel.m */; };
 		41593BD21E641A7F00088206 /* SupplyModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 41593BD11E641A7E00088206 /* SupplyModel.m */; };
 		41593BD51E641AA600088206 /* SupplyUserModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 41593BD41E641AA600088206 /* SupplyUserModel.m */; };
+		4162086C1E94E9B7009EB18C /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4162086B1E94E9B7009EB18C /* Images.xcassets */; };
 		41967CEB1E6135D3007EF5F4 /* MessageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 41967CEA1E6135D3007EF5F4 /* MessageViewController.m */; };
 		41967CEE1E6135FB007EF5F4 /* OrderNotificationVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 41967CED1E6135FB007EF5F4 /* OrderNotificationVC.m */; };
 		41967CF11E613613007EF5F4 /* SystemNotificationVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 41967CF01E613613007EF5F4 /* SystemNotificationVC.m */; };
@@ -274,6 +275,7 @@
 		41593BD11E641A7E00088206 /* SupplyModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SupplyModel.m; sourceTree = "<group>"; };
 		41593BD31E641AA600088206 /* SupplyUserModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SupplyUserModel.h; sourceTree = "<group>"; };
 		41593BD41E641AA600088206 /* SupplyUserModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SupplyUserModel.m; sourceTree = "<group>"; };
+		4162086B1E94E9B7009EB18C /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		41967CE91E6135D3007EF5F4 /* MessageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageViewController.h; sourceTree = "<group>"; };
 		41967CEA1E6135D3007EF5F4 /* MessageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageViewController.m; sourceTree = "<group>"; };
 		41967CEC1E6135FB007EF5F4 /* OrderNotificationVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OrderNotificationVC.h; sourceTree = "<group>"; };
@@ -1786,6 +1788,7 @@
 				75ECF6B71DB24571000C17C9 /* Info.plist */,
 				75ECF6A61DB24571000C17C9 /* Supporting Files */,
 				4158A2681E606CAC005C1181 /* MeiXiaoer.pch */,
+				4162086B1E94E9B7009EB18C /* Images.xcassets */,
 			);
 			path = MeiXiaoer;
 			sourceTree = "<group>";
@@ -1938,6 +1941,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7550E20C1DC88F7A000CE658 /* TencentOpenApi_IOS_Bundle.bundle in Resources */,
+				4162086C1E94E9B7009EB18C /* Images.xcassets in Resources */,
 				41BA75B31E85023F005927D8 /* EaseUIResource.bundle in Resources */,
 				41967D1A1E616F1D007EF5F4 /* AuditNotificationCell.xib in Resources */,
 				41967D151E616AE5007EF5F4 /* PaymentNotificationCell.xib in Resources */,
@@ -2385,6 +2389,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "813187f1-3ce1-4944-867a-45cbf4bb3317";
 				PROVISIONING_PROFILE_SPECIFIER = meixiaoerDev;
+				TARGETED_DEVICE_FAMILY = 1;
 				VALID_ARCHS = "arm64 armv7 armv7s";
 			};
 			name = Debug;
@@ -2443,6 +2448,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "111c1147-8f5e-41ad-b85e-0cbffdbe6896";
 				PROVISIONING_PROFILE_SPECIFIER = meixiaoerApp;
+				TARGETED_DEVICE_FAMILY = 1;
 				VALID_ARCHS = "arm64 armv7 armv7s";
 			};
 			name = Release;
